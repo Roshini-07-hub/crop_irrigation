@@ -46,7 +46,9 @@ async function apiRequest(endpoint, options = {}) {
         }
 
         if (!response.ok) {
-            const errorMsg = data.error || data.details || `API request failed with status ${response.status}`;
+            const errorMsg = (data.error && data.details && data.error !== data.details)
+                ? `${data.error} (${data.details})`
+                : (data.error || data.details || `API request failed with status ${response.status}`);
             throw new Error(errorMsg);
         }
 
