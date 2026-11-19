@@ -6,8 +6,7 @@
 
 const API_BASE_URL = (() => {
     if (typeof window !== "undefined" && window.location && window.location.origin) {
-        if (window.location.origin.startsWith("http://127.0.0.1:5000") ||
-            window.location.origin.startsWith("http://localhost:5000")) {
+        if (window.location.origin.startsWith("http")) {
             return `${window.location.origin}/api`;
         }
     }
@@ -16,8 +15,7 @@ const API_BASE_URL = (() => {
 
 const ROOT_BASE_URL = (() => {
     if (typeof window !== "undefined" && window.location && window.location.origin) {
-        if (window.location.origin.startsWith("http://127.0.0.1:5000") ||
-            window.location.origin.startsWith("http://localhost:5000")) {
+        if (window.location.origin.startsWith("http")) {
             return window.location.origin;
         }
     }
