@@ -143,7 +143,7 @@
                                     </div>
 
                                     <!-- Area & Method -->
-                                    <div class="row g-3 mb-4">
+                                    <div class="row g-3 mb-3">
                                         <div class="col-md-6">
                                             <label for="weatherArea" class="form-label">Field Area</label>
                                             <div class="input-group">
@@ -157,6 +157,28 @@
                                                 <option value="Drip" selected>Drip (90% Eff.)</option>
                                                 <option value="Sprinkler">Sprinkler (75% Eff.)</option>
                                                 <option value="Surface">Surface (60% Eff.)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Soil & Pump Inputs for Real Farmer Calculation -->
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label for="weatherSoil" class="form-label">Soil Type</label>
+                                            <select id="weatherSoil" class="form-select">
+                                                <option value="Loamy" selected>Loamy (Medium / Alluvial)</option>
+                                                <option value="Clay">Clay / Black Cotton Soil</option>
+                                                <option value="Sandy Loam">Sandy Loam / Red Chalka</option>
+                                                <option value="Sandy">Sandy (Fast Draining)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="weatherPumpHp" class="form-label">Farm Pump Size</label>
+                                            <select id="weatherPumpHp" class="form-select">
+                                                <option value="5.0" selected>5.0 HP (~45,000 L/hr - Standard)</option>
+                                                <option value="3.0">3.0 HP (~25,000 L/hr)</option>
+                                                <option value="7.5">7.5 HP (~65,000 L/hr)</option>
+                                                <option value="10.0">10.0 HP (~85,000 L/hr)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -205,7 +227,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row g-3 mb-4">
+                                    <div class="row g-3 mb-3">
                                         <div class="col-md-6">
                                             <label for="manualArea" class="form-label">Field Area</label>
                                             <div class="input-group">
@@ -219,6 +241,28 @@
                                                 <option value="Drip" selected>Drip (90% Eff.)</option>
                                                 <option value="Sprinkler">Sprinkler (75% Eff.)</option>
                                                 <option value="Surface">Surface (60% Eff.)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Soil & Pump Inputs for Manual Mode -->
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label for="manualSoil" class="form-label">Soil Type</label>
+                                            <select id="manualSoil" class="form-select">
+                                                <option value="Loamy" selected>Loamy (Medium / Alluvial)</option>
+                                                <option value="Clay">Clay / Black Cotton Soil</option>
+                                                <option value="Sandy Loam">Sandy Loam / Red Chalka</option>
+                                                <option value="Sandy">Sandy (Fast Draining)</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="manualPumpHp" class="form-label">Farm Pump Size</label>
+                                            <select id="manualPumpHp" class="form-select">
+                                                <option value="5.0" selected>5.0 HP (~45,000 L/hr - Standard)</option>
+                                                <option value="3.0">3.0 HP (~25,000 L/hr)</option>
+                                                <option value="7.5">7.5 HP (~65,000 L/hr)</option>
+                                                <option value="10.0">10.0 HP (~85,000 L/hr)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -246,57 +290,113 @@
 
                     <!-- Computed Result Card -->
                     <div id="resultCard" class="custom-card shadow-lg d-none fade-in">
-                        <div class="card-header-styled">
+                        <div class="card-header-styled flex-wrap gap-2">
                             <div>
-                                <span class="badge bg-success-subtle text-success px-2 py-1 mb-1">Result</span>
-                                <h4 class="mb-0" id="resCropHeader">Wheat • Flowering</h4>
+                                <span class="badge bg-success-subtle text-success px-2 py-1 mb-1">Farmer Water Schedule</span>
+                                <h4 class="mb-0" id="resCropHeader">Khesari • Flowering</h4>
+                                <span class="badge bg-light text-primary border mt-1" id="resRegimeBadge">Drought-Hardy Pulse / Residual Moisture</span>
                             </div>
-                            <span class="badge bg-light text-muted border" id="resMethodBadge">Drip (90%)</span>
+                            <div class="d-flex flex-column align-items-end gap-1">
+                                <span class="badge bg-light text-muted border" id="resMethodBadge">Sprinkler (75% Eff)</span>
+                                <span class="badge bg-light text-secondary border small" id="resSoilPumpBadge">Loamy • 5 HP Pump</span>
+                            </div>
                         </div>
 
-                        <!-- Primary Volume Number -->
-                        <div class="p-3 mb-3 rounded-4" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 1.5px solid #a7f3d0;">
-                            <div class="text-muted small text-uppercase fw-bold">Daily Water Requirement</div>
+                        <!-- Primary Real-Time Farmer Application Volume -->
+                        <div class="p-3 mb-3 rounded-4 shadow-sm" style="background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%); border: 1.5px solid #10b981;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div class="text-muted small text-uppercase fw-bold">🌾 Real-Time Farmer Irrigation Volume</div>
+                                <span class="badge bg-success text-white px-2 py-1 small" id="resCriticalityBadge">Critical Stage</span>
+                            </div>
                             <div class="d-flex align-items-baseline gap-2 my-1">
-                                <span class="metric-val text-success" id="resGrossLitres">0</span>
-                                <span class="fs-5 fw-bold text-success">Litres / day</span>
+                                <span class="metric-val text-success fw-bold" id="resEventVolume">0</span>
+                                <span class="fs-5 fw-bold text-success">Litres / watering</span>
                             </div>
-                            <div class="small text-muted" id="resDepthMm">Rate: 0.00 mm/day across 1.0 ha</div>
-                        </div>
-
-                        <!-- Breakdown Grid -->
-                        <div class="row g-2 mb-3">
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-white">
-                                    <div class="text-muted small">Crop Factor (Kc)</div>
-                                    <div class="fw-bold fs-5 text-dark" id="resKc">1.15</div>
+                            <div class="small text-muted mb-2" id="resEventDepth">Gross application depth: 0.0 mm across 1.0 ha</div>
+                            
+                            <!-- Key Farmer Operations Triad -->
+                            <div class="row g-2 pt-2 border-top border-success-subtle">
+                                <div class="col-4">
+                                    <div class="bg-white p-2 rounded border border-success-subtle text-center">
+                                        <div class="text-muted" style="font-size: 0.72rem;">🕒 SCHEDULE</div>
+                                        <strong class="text-dark small d-block" id="resInterval">Every 12-14 Days</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-white">
-                                    <div class="text-muted small">Weather ETo</div>
-                                    <div class="fw-bold fs-5 text-dark" id="resEto">4.50 mm/d</div>
+                                <div class="col-4">
+                                    <div class="bg-white p-2 rounded border border-success-subtle text-center">
+                                        <div class="text-muted" style="font-size: 0.72rem;">⚡ PUMP RUNTIME</div>
+                                        <strong class="text-dark small d-block" id="resPumpHours">~11.4 Hours</strong>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-white">
-                                    <div class="text-muted small">Net Need</div>
-                                    <div class="fw-bold fs-5 text-dark" id="resNetMm">5.18 mm/d</div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-white">
-                                    <div class="text-muted small">Rainfall</div>
-                                    <div class="fw-bold fs-5 text-dark" id="resRainMm">0.00 mm/d</div>
+                                <div class="col-4">
+                                    <div class="bg-white p-2 rounded border border-success-subtle text-center">
+                                        <div class="text-muted" style="font-size: 0.72rem;">🗓️ SEASON TOTAL</div>
+                                        <strong class="text-dark small d-block" id="resSeasonalCount">0-2 Irrigations</strong>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Benchmark -->
-                        <div class="mb-3 p-3 bg-light rounded-3 border">
-                            <div class="d-flex justify-content-between align-items-center small">
-                                <span class="text-muted">Season Water Guideline:</span>
-                                <strong id="resFaoRange">450 - 650 mm</strong>
+                        <!-- Over-Irrigation Warning Banner -->
+                        <div id="resWarningBox" class="alert alert-warning border-warning d-flex gap-2 align-items-start p-3 mb-3">
+                            <span class="fs-5">⚠️</span>
+                            <div>
+                                <strong class="d-block mb-1 text-dark" id="resWarningTitle">Important Farmer Advisory</strong>
+                                <span class="small text-secondary" id="resWarningText">
+                                    Do not irrigate daily! Khesari is drought-tolerant and grown on residual soil moisture.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Agronomic Practical Advice Box -->
+                        <div class="p-3 mb-3 bg-light rounded-3 border">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <span class="fs-6">🌱</span>
+                                <strong class="small text-dark">Field Agronomic Management:</strong>
+                            </div>
+                            <p class="small text-secondary mb-2" id="resGuidelineText">
+                                Pulses require 0 to 1 life-saving irrigation at flowering. Check root-zone soil moisture before turning on pump.
+                            </p>
+                            <div class="small text-muted border-top pt-2" id="resDailyClarification">
+                                Daily field moisture loss is 51,225 Litres/day. Real farmers replenish this in scheduled cycles of 512,070 Litres, not daily.
+                            </div>
+                        </div>
+
+                        <!-- Atmospheric Scientific Demand Grid -->
+                        <div class="p-3 mb-3 bg-white border rounded-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small fw-bold text-muted text-uppercase">Atmospheric Evaporative Loss (ETc)</span>
+                                <span class="badge bg-light text-muted border" id="resDepthMm">5.07 mm/day gross</span>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-light">
+                                        <div class="text-muted" style="font-size: 0.75rem;">Daily Transpiration Loss</div>
+                                        <div class="fw-bold fs-6 text-dark" id="resGrossLitres">51,225 L/d</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-light">
+                                        <div class="text-muted" style="font-size: 0.75rem;">Crop Factor (Kc)</div>
+                                        <div class="fw-bold fs-6 text-dark" id="resKc">1.15</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-light">
+                                        <div class="text-muted" style="font-size: 0.75rem;">Weather Reference (ETo)</div>
+                                        <div class="fw-bold fs-6 text-dark" id="resEto">3.31 mm/d</div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-light">
+                                        <div class="text-muted" style="font-size: 0.75rem;">Rainfall Contribution</div>
+                                        <div class="fw-bold fs-6 text-dark" id="resRainMm">0.00 mm/d</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center small text-muted border-top pt-2">
+                                <span>Season Water Guideline:</span>
+                                <strong id="resFaoRange">300 - 500 mm</strong>
                             </div>
                         </div>
 

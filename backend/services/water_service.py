@@ -198,6 +198,12 @@ def validate_water_input(data):
         )
 
 
+    soil_type = str(data.get("soil_type", "Loamy")).strip().title()
+    try:
+        pump_hp = float(data.get("pump_hp", 5.0))
+    except (TypeError, ValueError):
+        pump_hp = 5.0
+
     return {
 
         "crop":
@@ -223,7 +229,13 @@ def validate_water_input(data):
             irrigation_efficiency,
 
         "irrigation_method":
-            irrigation_method
+            irrigation_method,
+
+        "soil_type":
+            soil_type,
+
+        "pump_hp":
+            pump_hp
 
     }
 
@@ -266,7 +278,22 @@ def predict_water_requirement(data):
 
         irrigation_efficiency=clean_data[
             "irrigation_efficiency"
-        ]
+        ],
+
+        irrigation_method=clean_data.get(
+            "irrigation_method",
+            "Sprinkler"
+        ),
+
+        soil_type=clean_data.get(
+            "soil_type",
+            "Loamy"
+        ),
+
+        pump_hp=clean_data.get(
+            "pump_hp",
+            5.0
+        )
 
     )
 
@@ -302,7 +329,9 @@ def predict_water_requirement_from_location(
     latitude,
     longitude,
     irrigation_method=None,
-    irrigation_efficiency=None
+    irrigation_efficiency=None,
+    soil_type="Loamy",
+    pump_hp=5.0
 ):
     """
     Calculate crop water requirement using real weather data
@@ -453,7 +482,13 @@ def predict_water_requirement_from_location(
 
         rainfall_mm=rainfall_mm,
 
-        irrigation_efficiency=irrigation_efficiency
+        irrigation_efficiency=irrigation_efficiency,
+
+        irrigation_method=irrigation_method or "Sprinkler",
+
+        soil_type=soil_type,
+
+        pump_hp=pump_hp
 
     )
 

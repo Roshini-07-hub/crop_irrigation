@@ -36,7 +36,9 @@ VALID_IRRIGATION_TYPES = {
     "rainfed",
     "canal",
     "drip",
-    "sprinkler"
+    "sprinkler",
+    "surface",
+    "flood"
 }
 
 
@@ -795,6 +797,9 @@ def generate_irrigation_recommendation(
             f"Invalid irrigation type: {current_irrigation_type}"
         )
 
+    if irrigation_type in ["surface", "flood"]:
+        irrigation_type = "canal"
+
 
     # --------------------------------------------------------
     # Priority
@@ -900,6 +905,40 @@ def generate_irrigation_recommendation(
 
 
     # --------------------------------------------------------
+    # Real-Time Operational Water Quantity for Recommendation
+    # --------------------------------------------------------
+    if priority == "LOW" or soil_moisture >= 60:
+        recommended_water_litres = 0
+        volume_display = "0 Litres (Adequate soil moisture)"
+        pump_display = "0 Hours (No pumping needed)"
+        action_summary = "Soil moisture is currently sufficient. Delay irrigation to conserve water."
+    else:
+        try:
+            from backend.ml.processing.farmer_water_usage import calculate_farmer_water_plan
+            est_method = "Drip" if "drip" in technique["technique"].lower() or "drip" in str(current_irrigation_type).lower() else (
+                "Sprinkler" if "sprinkler" in technique["technique"].lower() or "sprinkler" in str(current_irrigation_type).lower() else "Surface"
+            )
+            plan = calculate_farmer_water_plan(
+                crop=crop,
+                growth_stage=growth_stage,
+                field_area_hectare=field_area_hectare,
+                daily_net_etc_mm=max(2.5, float(temperature_c) / 8.0),
+                daily_gross_mm=max(3.5, float(temperature_c) / 6.0),
+                irrigation_method=est_method,
+                soil_type=soil_type,
+                pump_hp=5.0
+            )
+            recommended_water_litres = plan["event_volume_litres"]
+            volume_display = f"{plan['event_volume_litres']:,} Litres"
+            pump_display = plan["pump_shift_display"]
+            action_summary = f"Apply {volume_display} during the recommended time window ({pump_display})."
+        except Exception:
+            recommended_water_litres = round(field_area_hectare * 500000)
+            volume_display = f"{recommended_water_litres:,} Litres"
+            pump_display = "~11 Hours (5 HP)"
+            action_summary = f"Apply {volume_display} during the recommended time window."
+
+    # --------------------------------------------------------
     # Result
     # --------------------------------------------------------
 
@@ -916,6 +955,18 @@ def generate_irrigation_recommendation(
 
         "priority_score":
             score,
+
+        "recommended_water_litres":
+            recommended_water_litres,
+
+        "event_volume_display":
+            volume_display,
+
+        "pump_shift_display":
+            pump_display,
+
+        "action_summary":
+            action_summary,
 
         "recommended_time":
             timing["time_window"],

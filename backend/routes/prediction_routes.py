@@ -599,7 +599,19 @@ def predict_water_from_weather():
 
                 irrigation_method=data[
                     "irrigation_method"
-                ]
+                ],
+
+                soil_type=data.get(
+                    "soil_type",
+                    "Loamy"
+                ),
+
+                pump_hp=float(
+                    data.get(
+                        "pump_hp",
+                        5.0
+                    )
+                )
 
             )
         )

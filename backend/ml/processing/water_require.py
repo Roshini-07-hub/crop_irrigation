@@ -1,6 +1,10 @@
 import pandas as pd
 from pathlib import Path
 
+from backend.ml.processing.farmer_water_usage import (
+    calculate_farmer_water_plan
+)
+
 
 # ============================================================
 # PATHS
@@ -100,35 +104,14 @@ def calculate_water_requirement(
     field_area_hectare,
     eto_mm_day,
     rainfall_mm=0,
-    irrigation_efficiency=0.80
+    irrigation_efficiency=0.80,
+    irrigation_method="Sprinkler",
+    soil_type="Loamy",
+    pump_hp=5.0
 ):
     """
-    Calculate crop water and irrigation requirement.
-
-    Parameters
-    ----------
-    crop : str
-        One of the 55 supported crops.
-
-    growth_stage : str
-        Sowing, Vegetative, Flowering or Harvest.
-
-    field_area_hectare : float
-        Field area in hectares.
-
-    eto_mm_day : float
-        Reference evapotranspiration in mm/day.
-
-    rainfall_mm : float
-        Rainfall contribution in mm/day.
-
-    irrigation_efficiency : float
-        Fraction of applied irrigation reaching the crop root zone.
-
-    Returns
-    -------
-    dict
-        Water requirement information.
+    Calculate crop water and irrigation requirement based on FAO-56
+    and real-time farmer operational field practices.
     """
 
     # --------------------------------------------------------
@@ -330,6 +313,35 @@ def calculate_water_requirement(
             "Reference_Source"
         ]
     }
+
+    # --------------------------------------------------------
+    # Real-Time Farmer Practical Water Usage & Schedule
+    # --------------------------------------------------------
+    farmer_plan = calculate_farmer_water_plan(
+        crop=crop_row["Crop"],
+        growth_stage=growth_stage,
+        field_area_hectare=field_area_hectare,
+        daily_net_etc_mm=net_irrigation_requirement_mm,
+        daily_gross_mm=gross_irrigation_requirement_mm,
+        irrigation_method=irrigation_method,
+        irrigation_efficiency=irrigation_efficiency,
+        soil_type=soil_type,
+        pump_hp=pump_hp
+    )
+
+    result["farmer_usage"] = farmer_plan
+    result["irrigation_interval_days"] = farmer_plan["irrigation_interval_days"]
+    result["irrigation_interval_display"] = farmer_plan["irrigation_interval_display"]
+    result["event_volume_litres"] = farmer_plan["event_volume_litres"]
+    result["event_gross_depth_mm"] = farmer_plan["event_gross_depth_mm"]
+    result["pump_hours_per_event"] = farmer_plan["pump_hours_per_event"]
+    result["pump_shift_display"] = farmer_plan.get("pump_shift_display", f"~{farmer_plan['pump_hours_per_event']} Hours")
+    result["shift_guidance"] = farmer_plan.get("shift_guidance", "")
+    result["seasonal_irrigations_summary"] = farmer_plan["seasonal_irrigations_summary"]
+    result["stage_criticality"] = farmer_plan["stage_criticality"]
+    result["farmer_practical_guideline"] = farmer_plan["farmer_practical_guideline"]
+    result["danger_warning"] = farmer_plan["danger_warning"]
+    result["daily_consumption_clarification"] = farmer_plan["daily_consumption_clarification"]
 
     return result
 

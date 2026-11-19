@@ -93,11 +93,57 @@ function checkPreFill() {
                 const stageSelect = document.getElementById("irrGrowthStage");
                 if (stageSelect) stageSelect.value = stage;
             }
+            if (data.input?.soil_type) {
+                const soilSelect = document.getElementById("irrSoilType");
+                if (soilSelect) {
+                    for (let i = 0; i < soilSelect.options.length; i++) {
+                        if (soilSelect.options[i].value.toLowerCase() === data.input.soil_type.toLowerCase()) {
+                            soilSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
             if (area) {
                 const liveArea = document.getElementById("irrLiveArea");
                 const manArea = document.getElementById("manArea");
                 if (liveArea) liveArea.value = area;
                 if (manArea) manArea.value = area;
+            }
+
+            // Prefill Location (Coordinates & Name) from Water Prediction
+            if (data.input?.latitude && data.input?.longitude) {
+                const lat = data.input.latitude;
+                const lon = data.input.longitude;
+                const locName = data.input.location_name || `${lat.toFixed(3)}° N, ${lon.toFixed(3)}° E`;
+                const latEl = document.getElementById("irrLat");
+                const lonEl = document.getElementById("irrLon");
+                const nameEl = document.getElementById("irrLocName");
+                const coordsEl = document.getElementById("irrLocCoords");
+                if (latEl) latEl.value = lat;
+                if (lonEl) lonEl.value = lon;
+                if (nameEl) nameEl.textContent = locName;
+                if (coordsEl) coordsEl.textContent = `${lat.toFixed(3)}° N, ${lon.toFixed(3)}° E`;
+            }
+
+            // Prefill Irrigation Method
+            const method = data.prediction?.irrigation_method || data.input?.irrigation_method;
+            if (method) {
+                const liveMethod = document.getElementById("irrLiveMethod");
+                const manMethod = document.getElementById("manMethod");
+                const selectMatching = (sel) => {
+                    if (!sel) return;
+                    for (let i = 0; i < sel.options.length; i++) {
+                        const val = sel.options[i].value.toLowerCase();
+                        const m = method.toLowerCase();
+                        if (val.includes(m) || m.includes(val) || (m.includes("surface") && val.includes("canal"))) {
+                            sel.selectedIndex = i;
+                            break;
+                        }
+                    }
+                };
+                selectMatching(liveMethod);
+                selectMatching(manMethod);
             }
             // Clear once consumed
             sessionStorage.removeItem("lastPrediction");
@@ -341,6 +387,15 @@ function displayIrrigationResult(rawRes, crop, stage) {
                           (res.explanation ? res.explanation.split('; ')[0] : null) || 
                           "Soil moisture evaluated against crop growth threshold.";
     safeSetText("resPrimaryReason", primaryReason);
+
+    // Recommended Volume & Pump Runtime
+    const volDisplay = res.event_volume_display || 
+                       (res.recommended_water_litres !== undefined ? `${Number(res.recommended_water_litres).toLocaleString()} Litres` : "Calculating volume...");
+    const pumpDisplay = res.pump_shift_display || 
+                        (res.recommended_water_litres === 0 ? "No pumping required" : "Pump runtime evaluating...");
+
+    safeSetText("resIrrVolume", volDisplay);
+    safeSetText("resIrrPumpRuntime", `Pump Runtime: ${pumpDisplay}`);
 
     safeSetText("resTiming", res.recommended_time || "Early Morning (06:00 - 08:30 AM)");
     safeSetText("resTechnique", res.recommended_technique || "Drip / Micro-Irrigation");
