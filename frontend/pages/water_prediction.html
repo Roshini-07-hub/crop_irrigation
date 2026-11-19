@@ -120,7 +120,14 @@
                                     <!-- Crop & Stage Selection -->
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-6">
-                                            <label for="weatherCrop" class="form-label">Crop</label>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <label for="weatherCrop" class="form-label mb-0">Crop</label>
+                                                <small class="text-muted">🔍 Quick search</small>
+                                            </div>
+                                            <div class="input-group input-group-sm mb-2">
+                                                <span class="input-group-text bg-white border-end-0">🔍</span>
+                                                <input type="text" id="weatherCropSearch" class="form-control border-start-0 ps-0" placeholder="Search Mirchi, Paddy, Wheat, Chana...">
+                                            </div>
                                             <select id="weatherCrop" class="form-select crop-select" required>
                                                 <option value="">Select Crop...</option>
                                             </select>
@@ -194,7 +201,14 @@
                                 <form id="manualWaterForm">
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-6">
-                                            <label for="manualCrop" class="form-label">Crop</label>
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <label for="manualCrop" class="form-label mb-0">Crop</label>
+                                                <small class="text-muted">🔍 Quick search</small>
+                                            </div>
+                                            <div class="input-group input-group-sm mb-2">
+                                                <span class="input-group-text bg-white border-end-0">🔍</span>
+                                                <input type="text" id="manualCropSearch" class="form-control border-start-0 ps-0" placeholder="Search Mirchi, Paddy, Wheat, Chana...">
+                                            </div>
                                             <select id="manualCrop" class="form-select crop-select" required>
                                                 <option value="">Select Crop...</option>
                                             </select>

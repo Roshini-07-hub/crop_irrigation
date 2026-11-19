@@ -54,25 +54,68 @@ async function initIrrigationCrops() {
         const select = document.getElementById("irrCrop");
         if (!select) return;
 
-        const grouped = {};
-        cropsList.forEach(c => {
-            const grp = c.crop_group || "General Crops";
-            if (!grouped[grp]) grouped[grp] = [];
-            grouped[grp].push(c);
-        });
+        renderIrrCropOptions(select, "Wheat");
 
-        let html = '<option value="">Select Crop...</option>';
-        for (const grp of Object.keys(grouped).sort()) {
+        const searchInput = document.getElementById("irrCropSearch");
+        if (searchInput) {
+            searchInput.addEventListener("input", (e) => {
+                renderIrrCropOptions(select, select.value, e.target.value);
+            });
+            searchInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    if (select.options.length > 1 && select.options[1].value) {
+                        select.selectedIndex = 1;
+                    }
+                }
+            });
+        }
+    } catch (e) {
+        console.error("Crops init error:", e);
+    }
+}
+
+function renderIrrCropOptions(selectEl, selectedDefault = "Wheat", filterText = "") {
+    if (!selectEl) return;
+    const currentVal = selectEl.value || selectedDefault;
+    const term = filterText.trim().toLowerCase();
+
+    const grouped = {};
+    cropsList.forEach(c => {
+        if (term) {
+            const cropMatch = c.crop.toLowerCase().includes(term);
+            const displayMatch = (c.display_name || "").toLowerCase().includes(term);
+            const groupMatch = (c.crop_group || "").toLowerCase().includes(term);
+            const aliasMatch = (c.aliases || []).some(a => a.toLowerCase().includes(term));
+            if (!cropMatch && !displayMatch && !groupMatch && !aliasMatch) {
+                return;
+            }
+        }
+        const grp = c.crop_group || "General Crops";
+        if (!grouped[grp]) grouped[grp] = [];
+        grouped[grp].push(c);
+    });
+
+    let html = '<option value="">Select Crop...</option>';
+    const groupKeys = Object.keys(grouped).sort();
+
+    if (groupKeys.length === 0) {
+        html += '<option value="" disabled>No matching crops found</option>';
+    } else {
+        for (const grp of groupKeys) {
             html += `<optgroup label="${grp}">`;
             grouped[grp].forEach(c => {
-                const sel = c.crop === "Wheat" ? "selected" : "";
-                html += `<option value="${c.crop}" ${sel}>${c.crop}</option>`;
+                const isSelected = c.crop.toLowerCase() === currentVal.toLowerCase() ? "selected" : "";
+                const display = c.display_name || c.crop;
+                html += `<option value="${c.crop}" ${isSelected}>${display}</option>`;
             });
             html += `</optgroup>`;
         }
-        select.innerHTML = html;
-    } catch (e) {
-        console.error("Crops init error:", e);
+    }
+    selectEl.innerHTML = html;
+
+    if (term && selectEl.options.length === 2 && selectEl.options[1].value) {
+        selectEl.selectedIndex = 1;
     }
 }
 

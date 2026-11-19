@@ -60,6 +60,152 @@ def load_crop_parameters():
 
 
 # ============================================================
+# CROP ALIAS NORMALIZATION
+# ============================================================
+
+CROP_ALIASES = {
+    # Paddy / Rice
+    "rice": "Paddy",
+    "rice paddy": "Paddy",
+    "paddy (rice)": "Paddy",
+    "paddy": "Paddy",
+    "dhan": "Paddy",
+
+    # Mirchi / Chilli / Red Chillies
+    "dry chillies": "Mirchi",
+    "dry chilli": "Mirchi",
+    "red chillies": "Mirchi",
+    "red chilli": "Mirchi",
+    "chilli": "Mirchi",
+    "chillies": "Mirchi",
+    "mirchi": "Mirchi",
+    "pepper": "Mirchi",
+    "lal mirch": "Mirchi",
+    "green chilli": "Mirchi",
+    "mirchi (chilli)": "Mirchi",
+    "mirchi (red chilli)": "Mirchi",
+
+    # Gram / Chana
+    "gram": "Gram (Chana)",
+    "chana": "Gram (Chana)",
+    "chickpea": "Gram (Chana)",
+    "bengal gram": "Gram (Chana)",
+    "gram (chana)": "Gram (Chana)",
+    "gram / chana": "Gram (Chana)",
+
+    # Cotton
+    "cotton": "Cotton",
+    "cotton(lint)": "Cotton",
+    "cotton (lint)": "Cotton",
+    "cotton (kapas)": "Cotton",
+    "kapas": "Cotton",
+
+    # Mustard
+    "mustard": "Mustard",
+    "rapeseed &mustard": "Mustard",
+    "rapeseed & mustard": "Mustard",
+    "mustard / rapeseed": "Mustard",
+    "sarson": "Mustard",
+    "rai": "Mustard",
+
+    # Pulses
+    "arhar": "Arhar/Tur",
+    "tur": "Arhar/Tur",
+    "toor": "Arhar/Tur",
+    "toor dal": "Arhar/Tur",
+    "pigeon pea": "Arhar/Tur",
+    "red gram": "Arhar/Tur",
+    "arhar/tur": "Arhar/Tur",
+    "arhar / tur": "Arhar/Tur",
+    "moong": "Moong (Green Gram)",
+    "green gram": "Moong (Green Gram)",
+    "moong(green gram)": "Moong (Green Gram)",
+    "moong (green gram)": "Moong (Green Gram)",
+    "urad": "Urad",
+    "black gram": "Urad",
+    "lobia": "Cowpea(Lobia)",
+    "cowpea": "Cowpea(Lobia)",
+    "cowpea(lobia)": "Cowpea(Lobia)",
+    "cowpea (lobia)": "Cowpea(Lobia)",
+    "kulthi": "Horse-gram",
+    "horse gram": "Horse-gram",
+    "horse-gram": "Horse-gram",
+
+    # Oilseeds
+    "peanut": "Groundnut",
+    "mungfali": "Groundnut",
+    "groundnut": "Groundnut",
+    "til": "Sesamum",
+    "sesame": "Sesamum",
+    "sesamum": "Sesamum",
+    "soybean": "Soyabean",
+    "soyabean": "Soyabean",
+    "flaxseed": "Linseed",
+    "alsi": "Linseed",
+    "linseed": "Linseed",
+    "other oilseeds": "Other Oilseeds",
+
+    # Cereals
+    "gehun": "Wheat",
+    "wheat": "Wheat",
+    "corn": "Maize",
+    "makka": "Maize",
+    "maize": "Maize",
+    "jowar": "Jowar",
+    "sorghum": "Jowar",
+    "bajra": "Bajra",
+    "pearl millet": "Bajra",
+    "ragi": "Ragi",
+    "finger millet": "Ragi",
+
+    # Cash / Vegetables
+    "ganna": "Sugarcane",
+    "sugarcane": "Sugarcane",
+    "aloo": "Potato",
+    "potato": "Potato",
+    "pyaz": "Onion",
+    "onion": "Onion",
+    "lahsun": "Garlic",
+    "garlic": "Garlic",
+    "adrak": "Ginger",
+    "ginger": "Ginger",
+    "haldi": "Turmeric",
+    "turmeric": "Turmeric",
+    "dhaniya": "Coriander",
+    "coriander": "Coriander"
+}
+
+
+def normalize_crop_name(crop, parameters_df):
+    """
+    Resolve crop name across regional farmer aliases and canonical dataset names.
+    Supports Mirchi, Red Chillies, Dry chillies, Paddy, Rice, Chana, etc.
+    """
+    c = str(crop).strip()
+    c_lower = c.lower()
+    supported = parameters_df["Crop"].tolist()
+
+    # 1. Exact case-insensitive match in dataset
+    for s in supported:
+        if s.lower() == c_lower:
+            return s
+
+    # 2. Known alias dictionary lookup
+    if c_lower in CROP_ALIASES:
+        canonical = CROP_ALIASES[c_lower]
+        for s in supported:
+            if s.lower() == canonical.lower():
+                return s
+
+    # 3. Substring match
+    for s in supported:
+        if s.lower() in c_lower or c_lower in s.lower():
+            return s
+
+    return c
+
+
+# ============================================================
 # GROWTH-STAGE → Kc
 # ============================================================
 
@@ -143,10 +289,11 @@ def calculate_water_requirement(
     # --------------------------------------------------------
 
     parameters = load_crop_parameters()
+    resolved_crop = normalize_crop_name(crop, parameters)
 
     crop_match = parameters[
         parameters["Crop"].str.strip().str.lower()
-        == str(crop).strip().lower()
+        == resolved_crop.strip().lower()
     ]
 
     if crop_match.empty:

@@ -48,8 +48,8 @@ PUMP_DISCHARGE_LPH = {
 CROP_ARCHETYPES = {
     "pulse_hardy_residual": {
         "crops": [
-            "khesari", "moth", "horse-gram", "guar seed", "gram", "masoor",
-            "urad", "moong(green gram)", "other rabi pulses", "other kharif pulses",
+            "khesari", "moth", "horse-gram", "guar seed", "gram", "gram (chana)", "chana", "masoor",
+            "urad", "moong(green gram)", "moong (green gram)", "other rabi pulses", "other kharif pulses",
             "other summer pulses", "cowpea(lobia)", "arhar/tur", "peas & beans (pulses)"
         ],
         "category_title": "Drought-Hardy Pulse / Residual Moisture",
@@ -104,7 +104,7 @@ CROP_ARCHETYPES = {
         }
     },
     "rice_awd": {
-        "crops": ["rice"],
+        "crops": ["rice", "paddy", "dhan"],
         "category_title": "Semi-Aquatic Cereal (Alternate Wetting & Drying)",
         "seasonal_irrigations": "15 - 20 Intermittent Cycles",
         "roots_by_stage": {
@@ -130,8 +130,9 @@ CROP_ARCHETYPES = {
     },
     "oilseed_standard": {
         "crops": [
-            "rapeseed &mustard", "linseed", "safflower", "niger seed", "sesamum",
-            "castor seed", "sunflower", "soyabean", "groundnut", "other oilseeds", "oilseeds total"
+            "mustard", "rapeseed &mustard", "sarson", "rai", "linseed", "safflower",
+            "niger seed", "sesamum", "castor seed", "sunflower", "soyabean", "groundnut",
+            "other oilseeds", "oilseeds total"
         ],
         "category_title": "Oilseed Crop",
         "seasonal_irrigations": "2 - 4 Irrigations Total",
@@ -157,7 +158,7 @@ CROP_ARCHETYPES = {
         }
     },
     "commercial_cash": {
-        "crops": ["cotton(lint)", "sugarcane", "banana"],
+        "crops": ["cotton", "cotton(lint)", "kapas", "sugarcane", "banana"],
         "category_title": "High-Value Commercial Cash Crop",
         "seasonal_irrigations": "4 - 6 (Cotton) / 18 - 25 (Sugarcane/Banana)",
         "roots_by_stage": {
@@ -183,7 +184,7 @@ CROP_ARCHETYPES = {
     },
     "vegetable_frequent": {
         "crops": [
-            "potato", "onion", "garlic", "dry chillies", "tomato",
+            "potato", "onion", "garlic", "mirchi", "chilli", "chillies", "red chillies", "dry chillies", "tomato",
             "ginger", "turmeric", "coriander"
         ],
         "category_title": "Shallow-Rooted Vegetable & Spice",

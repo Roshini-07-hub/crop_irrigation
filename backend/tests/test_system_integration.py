@@ -133,6 +133,36 @@ class SystemIntegrationTestCase(unittest.TestCase):
         self.assertEqual(res_del.status_code, 200)
         self.assertTrue(res_del.get_json()["success"])
 
+    def test_10_crop_aliases_and_renaming(self):
+        # 1. Check metadata endpoint
+        res = self.client.get("/api/crops/")
+        data = res.get_json()
+        crop_names = [c["crop"] for c in data["crops"]]
+        self.assertIn("Mirchi", crop_names)
+        self.assertIn("Paddy", crop_names)
+        mirchi_obj = next(c for c in data["crops"] if c["crop"] == "Mirchi")
+        self.assertIn("Chilli", mirchi_obj["display_name"])
+        self.assertIn("red chillies", mirchi_obj["aliases"])
+
+        paddy_obj = next(c for c in data["crops"] if c["crop"] == "Paddy")
+        self.assertIn("Rice", paddy_obj["display_name"])
+        self.assertIn("rice", paddy_obj["aliases"])
+
+        # 2. Test predictions with Mirchi, Paddy, and legacy aliases
+        for crop_alias in ["Mirchi", "Dry chillies", "red chillies", "Paddy", "Rice", "Cotton(lint)", "Chana"]:
+            payload = {
+                "crop": crop_alias,
+                "growth_stage": "Flowering",
+                "field_area_hectare": 1.0,
+                "eto_mm_day": 5.0,
+                "irrigation_method": "Drip"
+            }
+            pred_res = self.client.post("/api/predict/water", json=payload)
+            self.assertEqual(pred_res.status_code, 200, f"Failed for {crop_alias}")
+            pred_data = pred_res.get_json()
+            self.assertTrue(pred_data["success"])
+            self.assertGreater(pred_data["prediction"]["gross_irrigation_litres"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

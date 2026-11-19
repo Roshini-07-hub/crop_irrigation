@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * Fetch and populate 55 crops with optgroups
+ * Fetch and populate 55 crops with optgroups and live search filter
  */
 async function initCrops() {
     try {
@@ -52,35 +52,85 @@ async function initCrops() {
         const weatherSelect = document.getElementById("weatherCrop");
         const manualSelect = document.getElementById("manualCrop");
 
-        // Group crops by group
-        const grouped = {};
-        cropsDatabase.forEach(c => {
-            const grp = c.crop_group || "General Crops";
-            if (!grouped[grp]) grouped[grp] = [];
-            grouped[grp].push(c);
-        });
+        renderCropOptions(weatherSelect, "Wheat");
+        renderCropOptions(manualSelect, "Wheat");
 
-        const buildOptionsHtml = (selectedDefault = "Wheat") => {
-            let html = '<option value="">Select Crop...</option>';
-            for (const grp of Object.keys(grouped).sort()) {
-                html += `<optgroup label="${grp}">`;
-                grouped[grp].forEach(c => {
-                    const sel = c.crop === selectedDefault ? "selected" : "";
-                    html += `<option value="${c.crop}" ${sel}>${c.crop}</option>`;
-                });
-                html += `</optgroup>`;
-            }
-            return html;
-        };
-
-        if (weatherSelect) weatherSelect.innerHTML = buildOptionsHtml("Wheat");
-        if (manualSelect) manualSelect.innerHTML = buildOptionsHtml("Wheat");
+        setupCropSearch("weatherCropSearch", "weatherCrop", "weather");
+        setupCropSearch("manualCropSearch", "manualCrop", "manual");
 
         updateKcPreview("weather");
         updateKcPreview("manual");
     } catch (e) {
         console.error("Failed to load crops:", e);
     }
+}
+
+function renderCropOptions(selectEl, selectedDefault = "Wheat", filterText = "") {
+    if (!selectEl) return;
+    const currentVal = selectEl.value || selectedDefault;
+    const term = filterText.trim().toLowerCase();
+
+    // Group crops
+    const grouped = {};
+    cropsDatabase.forEach(c => {
+        if (term) {
+            const cropMatch = c.crop.toLowerCase().includes(term);
+            const displayMatch = (c.display_name || "").toLowerCase().includes(term);
+            const groupMatch = (c.crop_group || "").toLowerCase().includes(term);
+            const aliasMatch = (c.aliases || []).some(a => a.toLowerCase().includes(term));
+            if (!cropMatch && !displayMatch && !groupMatch && !aliasMatch) {
+                return;
+            }
+        }
+        const grp = c.crop_group || "General Crops";
+        if (!grouped[grp]) grouped[grp] = [];
+        grouped[grp].push(c);
+    });
+
+    let html = '<option value="">Select Crop...</option>';
+    const groupKeys = Object.keys(grouped).sort();
+
+    if (groupKeys.length === 0) {
+        html += '<option value="" disabled>No matching crops found</option>';
+    } else {
+        for (const grp of groupKeys) {
+            html += `<optgroup label="${grp}">`;
+            grouped[grp].forEach(c => {
+                const isSelected = c.crop.toLowerCase() === currentVal.toLowerCase() ? "selected" : "";
+                const display = c.display_name || c.crop;
+                html += `<option value="${c.crop}" ${isSelected}>${display}</option>`;
+            });
+            html += `</optgroup>`;
+        }
+    }
+
+    selectEl.innerHTML = html;
+
+    // If searching and exactly 1 result returned, select it automatically
+    if (term && selectEl.options.length === 2 && selectEl.options[1].value) {
+        selectEl.selectedIndex = 1;
+    }
+}
+
+function setupCropSearch(searchId, selectId, mode) {
+    const searchInput = document.getElementById(searchId);
+    const selectEl = document.getElementById(selectId);
+    if (!searchInput || !selectEl) return;
+
+    searchInput.addEventListener("input", (e) => {
+        renderCropOptions(selectEl, selectEl.value, e.target.value);
+        updateKcPreview(mode);
+    });
+
+    searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (selectEl.options.length > 1 && selectEl.options[1].value) {
+                selectEl.selectedIndex = 1;
+                updateKcPreview(mode);
+            }
+        }
+    });
 }
 
 /**
