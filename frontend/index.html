@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Water Prediction &amp; Precision Irrigation</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ======================================================================
+         NAVBAR
+         ====================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <div class="brand-icon">🌱</div>
+                <span>Smart Irrigation AI</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/water_prediction.html">Water Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/irrigation_recommendation.html">Irrigation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pages/history.html">History</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <div id="systemHealthBadge" class="system-badge-pill">
+                        <div class="pulse-dot"></div>
+                        <span id="systemHealthText">System Ready</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================================
+         HERO SECTION
+         ====================================================================== -->
+    <header class="hero-wrapper py-5">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <div class="hero-tag">
+                        <span>🌾 Precision Agriculture</span>
+                    </div>
+                    <h1 class="hero-title mb-3">
+                        Smart Crop Water Prediction &amp; <span class="gradient-text">Precision Irrigation</span>
+                    </h1>
+                    <p class="hero-lead mb-4 text-muted fs-6">
+                        Data-driven crop water estimates and smart irrigation recommendations.
+                    </p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="pages/dashboard.html" class="btn btn-primary-custom">
+                            <span>📊 Dashboard</span>
+                        </a>
+                        <a href="pages/water_prediction.html" class="btn btn-outline-custom">
+                            <span>💧 Water Prediction</span>
+                        </a>
+                        <a href="pages/irrigation_recommendation.html" class="btn btn-secondary-custom">
+                            <span>🚿 Irrigation Advisor</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <!-- Quick Estimate Card -->
+                    <div class="custom-card shadow-lg">
+                        <div class="card-header-styled pb-2 mb-3">
+                            <h4><span>⚡ Quick Water Estimator</span></h4>
+                            <span class="badge bg-success-subtle text-success">Live Engine</span>
+                        </div>
+                        <form id="quickEstimatorForm">
+                            <div class="mb-3">
+                                <label for="quickCrop" class="form-label">Crop Name</label>
+                                <select id="quickCrop" class="form-select" required>
+                                    <option value="Wheat">Wheat (Grain)</option>
+                                    <option value="Rice">Rice (Paddy)</option>
+                                    <option value="Maize">Maize</option>
+                                    <option value="Cotton(lint)">Cotton</option>
+                                    <option value="Sugarcane">Sugarcane</option>
+                                    <option value="Potato">Potato</option>
+                                    <option value="Groundnut">Groundnut</option>
+                                    <option value="Soyabean">Soyabean</option>
+                                    <option value="Onion">Onion</option>
+                                    <option value="Banana">Banana</option>
+                                </select>
+                            </div>
+
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <label for="quickStage" class="form-label">Growth Stage</label>
+                                    <select id="quickStage" class="form-select" required>
+                                        <option value="Sowing">Sowing</option>
+                                        <option value="Vegetative">Vegetative</option>
+                                        <option value="Flowering" selected>Flowering</option>
+                                        <option value="Harvest">Harvest</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label for="quickArea" class="form-label">Area (Hectares)</label>
+                                    <input type="number" id="quickArea" class="form-control" value="1.0" min="0.1" step="0.1" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="quickMethod" class="form-label">Irrigation Method</label>
+                                <select id="quickMethod" class="form-select">
+                                    <option value="Drip">Drip Irrigation (90% Eff.)</option>
+                                    <option value="Sprinkler">Sprinkler (75% Eff.)</option>
+                                    <option value="Surface">Surface / Furrow (60% Eff.)</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary-custom w-100" id="quickCalcBtn">
+                                <span>Calculate Requirement</span>
+                            </button>
+                        </form>
+
+                        <div id="quickResult" class="mt-3 p-3 rounded-3 bg-light d-none">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="text-muted small">Daily Need:</span>
+                                <strong class="text-success fs-5" id="quickResultLitres">0 Litres</strong>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-muted small">Application Rate:</span>
+                                <span class="fw-bold" id="quickResultMm">0.0 mm/day</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ======================================================================
+         KEY FEATURES (CONCISE & PUNCHY)
+         ====================================================================== -->
+    <section class="py-5 bg-white border-top border-bottom">
+        <div class="container">
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-light h-100">
+                        <div class="brand-icon mx-auto mb-3" style="width:52px;height:52px;font-size:24px;">💧</div>
+                        <h5 class="fw-bold mb-2">Water Requirement</h5>
+                        <p class="text-muted small mb-0">Calculates daily crop water need and gross volume across 55 crops.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-light h-100">
+                        <div class="brand-icon mx-auto mb-3" style="width:52px;height:52px;font-size:24px;">🛰️</div>
+                        <h5 class="fw-bold mb-2">Live Weather &amp; GPS</h5>
+                        <p class="text-muted small mb-0">Fetches temperature, radiation, and rainfall automatically by location.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 rounded-4 bg-light h-100">
+                        <div class="brand-icon mx-auto mb-3" style="width:52px;height:52px;font-size:24px;">🚿</div>
+                        <h5 class="fw-bold mb-2">Smart Scheduling</h5>
+                        <p class="text-muted small mb-0">Delivers watering priority, optimal timing, and method advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================================
+         FOOTER
+         ====================================================================== -->
+    <footer class="footer-custom py-4 mt-0">
+        <div class="container">
+            <div class="row align-items-center g-3">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fs-5">🌱</span>
+                        <span class="fw-bold small">Smart Crop Water &amp; Irrigation System</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <div class="d-flex justify-content-md-end gap-3 small">
+                        <a href="pages/dashboard.html">Dashboard</a>
+                        <a href="pages/water_prediction.html">Water Prediction</a>
+                        <a href="pages/irrigation_recommendation.html">Irrigation</a>
+                        <a href="pages/history.html">History</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Project Scripts -->
+    <script src="js/api.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const health = await getHealthStatus();
+                const healthText = document.getElementById("systemHealthText");
+                const healthBadge = document.getElementById("systemHealthBadge");
+                if (health.success) {
+                    healthText.textContent = health.database?.mongodb_active ? "Cloud (Atlas)" : "Operational";
+                } else {
+                    healthText.textContent = "Offline";
+                    healthBadge.classList.replace("text-success", "text-danger");
+                }
+            } catch (e) {}
+
+            const form = document.getElementById("quickEstimatorForm");
+            if (form) {
+                form.addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const btn = document.getElementById("quickCalcBtn");
+                    const origText = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2"></span>Calculating...`;
+
+                    const crop = document.getElementById("quickCrop").value;
+                    const growthStage = document.getElementById("quickStage").value;
+                    const fieldArea = parseFloat(document.getElementById("quickArea").value) || 1.0;
+                    const irrigationMethod = document.getElementById("quickMethod").value;
+
+                    try {
+                        const res = await predictWater({
+                            crop: crop,
+                            growth_stage: growthStage,
+                            field_area_hectare: fieldArea,
+                            eto_mm_day: 4.5,
+                            rainfall_mm: 0,
+                            irrigation_method: irrigationMethod
+                        });
+
+                        const pred = res.prediction || res;
+                        const litres = Number(pred.gross_irrigation_litres || pred.crop_water_requirement_litres || 0);
+                        const mm = Number(pred.gross_irrigation_requirement_mm || pred.crop_water_requirement_mm || 0);
+
+                        const resultBox = document.getElementById("quickResult");
+                        resultBox.classList.remove("d-none");
+                        document.getElementById("quickResultLitres").textContent = `${Math.round(litres).toLocaleString()} Litres/day`;
+                        document.getElementById("quickResultMm").textContent = `${mm.toFixed(2)} mm/day (${irrigationMethod})`;
+                    } catch (err) {
+                        alert("Quick calculation error: " + err.message);
+                    } finally {
+                        btn.disabled = false;
+                        btn.innerHTML = origText;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

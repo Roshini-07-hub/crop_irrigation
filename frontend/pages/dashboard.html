@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard | Smart Irrigation AI</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ======================================================================
+         NAVBAR
+         ====================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <div class="brand-icon">🌱</div>
+                <span>Smart Irrigation AI</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="water_prediction.html">Water Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="irrigation_recommendation.html">Irrigation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">History</a>
+                    </li>
+
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button id="refreshDashboardBtn" class="btn btn-secondary-custom btn-sm">
+                        <span>🔄 Refresh</span>
+                    </button>
+                    <div id="systemHealthBadge" class="system-badge-pill">
+                        <div class="pulse-dot"></div>
+                        <span id="systemHealthText">Operational</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================================
+         DASHBOARD MAIN CONTENT
+         ====================================================================== -->
+    <main class="py-4">
+        <div class="container">
+            
+            <!-- Dashboard Header Title -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1">Dashboard</h2>
+                    <p class="text-muted small mb-0">Live farm weather, water metrics, and recent predictions.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="water_prediction.html" class="btn btn-primary-custom btn-sm">
+                        <span>💧 Water Prediction</span>
+                    </a>
+                    <a href="irrigation_recommendation.html" class="btn btn-outline-custom btn-sm">
+                        <span>🚿 Irrigation Advisor</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Live Weather Banner -->
+            <div class="dashboard-weather-banner">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-5">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Live Telemetry</span>
+                            <span id="weatherSourceBadge" class="text-white-50 small">Live Weather</span>
+                        </div>
+                        <h3 class="fw-bold text-white mb-1" id="locationTitle">Hyderabad, Telangana (Reference)</h3>
+                        <p class="text-white-50 small mb-3" id="coordinatesText">Lat: 17.385° N, Lon: 78.487° E</p>
+                        
+                        <div class="d-flex gap-2">
+                            <button id="detectLocationButton" class="btn btn-sm btn-outline-light">
+                                <span>📍 Detect My Location</span>
+                            </button>
+                            <a href="water_prediction.html" class="btn btn-sm btn-success">
+                                <span>Use in Prediction</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="row g-2">
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill">
+                                    <span class="weather-param-label">Temperature</span>
+                                    <span class="weather-param-value" id="weatherTemp">-- °C</span>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill">
+                                    <span class="weather-param-label">Humidity</span>
+                                    <span class="weather-param-value" id="weatherHumidity">-- %</span>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill">
+                                    <span class="weather-param-label">Wind (2m)</span>
+                                    <span class="weather-param-value" id="weatherWind">-- km/h</span>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill">
+                                    <span class="weather-param-label">Rainfall</span>
+                                    <span class="weather-param-value" id="weatherRain">0.0 mm</span>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill">
+                                    <span class="weather-param-label">Solar Rad</span>
+                                    <span class="weather-param-value" id="weatherRadiation">-- MJ/m²</span>
+                                </div>
+                            </div>
+                            <div class="col-4 col-sm-4">
+                                <div class="weather-param-pill" style="border-color: #10b981; background: rgba(16, 185, 129, 0.2);">
+                                    <span class="weather-param-label text-success">FAO-56 ETo</span>
+                                    <span class="weather-param-value text-success" id="weatherEto">-- mm/d</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Metric Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-3">
+                    <div class="metric-card">
+                        <div class="metric-title">Total Records</div>
+                        <div class="metric-val" id="totalPredictions">0</div>
+                        <div class="metric-subtitle">Predictions generated</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="metric-card metric-card-primary">
+                        <div class="metric-title">Modeled Water</div>
+                        <div class="metric-val" id="totalWaterLitres">0 <span class="metric-unit">L</span></div>
+                        <div class="metric-subtitle">Total irrigation volume</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="metric-card">
+                        <div class="metric-title">Critical / High Alerts</div>
+                        <div class="metric-val text-danger" id="highPriorityCount">0</div>
+                        <div class="metric-subtitle">Fields requiring immediate irrigation</div>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="metric-card">
+                        <div class="metric-title">Avg Crop Water</div>
+                        <div class="metric-val text-success" id="avgWaterMm">0.0 <span class="metric-unit">mm/d</span></div>
+                        <div class="metric-subtitle">Mean daily application depth</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-7">
+                    <div class="chart-container-card">
+                        <div class="card-header-styled">
+                            <h5><span>💧 Crop Water Requirement Comparison</span></h5>
+                            <span class="badge bg-light text-muted border">Latest Records</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="waterChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="chart-container-card">
+                        <div class="card-header-styled">
+                            <h5><span>🚿 Irrigation Priority Share</span></h5>
+                            <span class="badge bg-light text-muted border">Distribution</span>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="priorityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Predictions Table -->
+            <div class="custom-card mb-4">
+                <div class="card-header-styled">
+                    <h4><span>📋 Recent Farm Predictions</span></h4>
+                    <a href="history.html" class="btn btn-sm btn-outline-custom">View All Records</a>
+                </div>
+
+                <div class="table-custom-wrapper">
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Date / Time</th>
+                                    <th>Crop</th>
+                                    <th>Stage</th>
+                                    <th>Type</th>
+                                    <th>Field Area</th>
+                                    <th>Water Need (Litres)</th>
+                                    <th>Priority</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentPredictionsTableBody">
+                                <tr>
+                                    <td colspan="8" class="text-center py-4 text-muted">
+                                        Loading recent farm predictions...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Tiles -->
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <a href="water_prediction.html" class="quick-action-tile">
+                        <div class="quick-action-icon green">💧</div>
+                        <div class="quick-action-content">
+                            <h6>Crop Water Prediction</h6>
+                            <p>Calculate crop water needs and application volume.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="irrigation_recommendation.html" class="quick-action-tile">
+                        <div class="quick-action-icon blue">🚿</div>
+                        <div class="quick-action-content">
+                            <h6>Irrigation Advisor</h6>
+                            <p>Check watering priority and optimal timing.</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4">
+                    <a href="history.html" class="quick-action-tile">
+                        <div class="quick-action-icon amber">📊</div>
+                        <div class="quick-action-content">
+                            <h6>Prediction History</h6>
+                            <p>View past records and export CSV/JSON data.</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ======================================================================
+         FOOTER
+         ====================================================================== -->
+    <footer class="footer-custom py-4">
+        <div class="container text-center text-muted small">
+            <p class="mb-0">🌱 Smart Irrigation AI</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Project JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/charts.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

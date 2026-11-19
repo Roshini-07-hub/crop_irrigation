@@ -1,0 +1,52 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+    .hero-title {
+        font-size: 2.35rem;
+    }
+    
+    .navbar-collapse {
+        background: white;
+        padding: 16px;
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        margin-top: 10px;
+    }
+
+    .nav-link {
+        padding: 10px 14px !important;
+    }
+
+    .dashboard-weather-banner {
+        padding: 22px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-title {
+        font-size: 1.95rem;
+    }
+
+    .hero-lead {
+        font-size: 1rem;
+    }
+
+    .custom-card {
+        padding: 20px;
+    }
+
+    .metric-val {
+        font-size: 1.85rem;
+    }
+
+    .table-custom-wrapper {
+        border-radius: var(--radius-md);
+    }
+
+    .table-custom th, .table-custom td {
+        padding: 12px;
+        font-size: 0.85rem;
+    }
+}

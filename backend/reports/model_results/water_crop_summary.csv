@@ -1,0 +1,56 @@
+Crop,Crop_Group,Kc_Initial,Kc_Development,Kc_Mid,Kc_Late,Water_Need_Min_mm,Water_Need_Max_mm,Reference_Source,Parameter_Status,Seasonal_Water_Midpoint_mm,Standard_ETo_mm_day,Kc_Used_For_Analysis,Daily_Crop_Water_Requirement_mm,Daily_Crop_Water_Requirement_Litres_per_ha
+Arecanut,Tropical fruits/trees,0.5,0.9,1.0,0.9,,,FAO tropical crop group,group_reference,,5.0,1.0,5.0,50000.0
+Arhar/Tur,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Bajra,Millet,0.35,0.7,1.1,0.65,450.0,650.0,FAO sorghum/millet,group_reference,550.0,5.0,1.1,5.5,55000.0
+Banana,Banana,0.5,1.1,1.0,1.0,1200.0,2200.0,FAO banana,reference,1700.0,5.0,1.0,5.0,50000.0
+Barley,Barley/Oats/Wheat,0.35,0.75,1.15,0.45,450.0,650.0,FAO barley/oats/wheat,reference,550.0,5.0,1.15,5.75,57500.0
+Black pepper,Tropical fruits/trees,0.5,0.9,1.0,0.9,,,FAO tropical crop group,group_reference,,5.0,1.0,5.0,50000.0
+Cardamom,Tropical fruits/trees,0.5,0.9,1.0,0.9,,,FAO tropical crop group,group_reference,,5.0,1.0,5.0,50000.0
+Cashewnut,Tropical fruits/trees,0.5,0.9,1.0,0.9,,,FAO tropical crop group,group_reference,,5.0,1.0,5.0,50000.0
+Castor seed,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Coconut,Tropical fruits/trees,0.5,0.9,1.0,0.9,,,FAO tropical crop group,group_reference,,5.0,1.0,5.0,50000.0
+Coriander,Herb/vegetable group,0.5,0.8,1.05,0.85,,,FAO crop-group mapping,group_reference,,5.0,1.05,5.25,52500.0
+Cotton(lint),Cotton/Flax,0.45,0.75,1.15,0.75,700.0,1300.0,FAO cotton/flax,reference,1000.0,5.0,1.15,5.75,57500.0
+Cowpea(Lobia),Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Dry chillies,Pepper,0.35,0.7,1.05,0.9,600.0,900.0,FAO pepper,group_reference,750.0,5.0,1.05,5.25,52500.0
+Garlic,Onion/allium group,0.5,0.75,1.05,0.85,350.0,550.0,FAO onion group,group_reference,450.0,5.0,1.05,5.25,52500.0
+Ginger,Root/tuber group,0.5,0.8,1.1,0.8,,,FAO root/tuber group,group_reference,,5.0,1.1,5.5,55000.0
+Gram,Chickpea/pulses,0.4,0.8,1.0,0.35,300.0,500.0,FAO chickpea/pulses,group_reference,400.0,5.0,1.0,5.0,50000.0
+Groundnut,Groundnut/Peanut,0.45,0.75,1.15,0.6,500.0,700.0,FAO groundnut,reference,600.0,5.0,1.15,5.75,57500.0
+Guar seed,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Horse-gram,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Jowar,Sorghum,0.35,0.75,1.1,0.65,450.0,650.0,FAO sorghum,reference,550.0,5.0,1.1,5.5,55000.0
+Jute,Fibre crop group,0.35,0.75,1.1,0.7,,,FAO crop-group mapping,group_reference,,5.0,1.1,5.5,55000.0
+Khesari,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Linseed,Cotton/Flax,0.45,0.75,1.15,0.75,,,FAO cotton/flax,group_reference,,5.0,1.15,5.75,57500.0
+Maize,Maize grain,0.4,0.8,1.15,0.7,500.0,800.0,FAO maize,reference,650.0,5.0,1.15,5.75,57500.0
+Masoor,Lentil,0.45,0.75,1.1,0.3,300.0,500.0,FAO lentil,group_reference,400.0,5.0,1.1,5.5,55000.0
+Mesta,Fibre crop group,0.35,0.75,1.1,0.7,,,FAO crop-group mapping,group_reference,,5.0,1.1,5.5,55000.0
+Moong(Green Gram),Green gram/pulses,0.4,0.8,1.05,0.35,300.0,500.0,FAO green gram/cowpea,group_reference,400.0,5.0,1.05,5.25,52500.0
+Moth,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Niger seed,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Oilseeds total,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Onion,Onion dry,0.5,0.75,1.05,0.85,350.0,550.0,FAO onion,reference,450.0,5.0,1.05,5.25,52500.0
+Other Rabi pulses,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Other Cereals,Grain/small,0.35,0.75,1.1,0.65,450.0,650.0,FAO grain/small,group_reference,550.0,5.0,1.1,5.5,55000.0
+Other Kharif pulses,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Other Summer Pulses,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Peas & beans (Pulses),Pea fresh,0.5,0.8,1.15,1.1,350.0,500.0,FAO pea,group_reference,425.0,5.0,1.15,5.75,57500.0
+Potato,Potato,0.45,0.75,1.15,0.75,500.0,700.0,FAO potato,reference,600.0,5.0,1.15,5.75,57500.0
+Ragi,Millet,0.35,0.7,1.1,0.65,450.0,650.0,FAO millet,group_reference,550.0,5.0,1.1,5.5,55000.0
+Rapeseed &Mustard,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Rice,Rice paddy,1.1,1.1,1.2,1.0,450.0,700.0,FAO rice,reference,575.0,5.0,1.2,6.0,60000.0
+Safflower,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Sannhamp,Fibre crop group,0.35,0.75,1.1,0.7,,,FAO crop-group mapping,group_reference,,5.0,1.1,5.5,55000.0
+Sesamum,Sesame/oilseed group,0.4,0.75,1.1,0.5,,,FAO sesame/oilseed group,group_reference,,5.0,1.1,5.5,55000.0
+Small millets,Millet,0.35,0.7,1.1,0.65,450.0,650.0,FAO millet,group_reference,550.0,5.0,1.1,5.5,55000.0
+Soyabean,Soybean,0.35,0.75,1.15,0.5,450.0,700.0,FAO soybean,reference,575.0,5.0,1.15,5.75,57500.0
+Sugarcane,Sugarcane,0.4,0.8,1.25,0.75,1500.0,2500.0,FAO sugarcane,reference,2000.0,5.0,1.25,6.25,62500.0
+Sunflower,Sunflower,0.35,0.75,1.15,0.55,600.0,1000.0,FAO sunflower,reference,800.0,5.0,1.15,5.75,57500.0
+Sweet potato,Sweet potato/root crop,0.5,0.8,1.15,0.65,,,FAO root/tuber group,group_reference,,5.0,1.15,5.75,57500.0
+Tapioca,Cassava,0.3,0.8,0.8,0.3,,,FAO cassava,group_reference,,5.0,0.8,4.0,40000.0
+Tobacco,Tobacco,0.35,0.75,1.1,0.9,,,FAO tobacco,reference,,5.0,1.1,5.5,55000.0
+Turmeric,Root/tuber group,0.5,0.8,1.1,0.8,,,FAO root/tuber group,group_reference,,5.0,1.1,5.5,55000.0
+Urad,Beans dry and pulses,0.4,0.8,1.15,0.35,300.0,500.0,FAO beans dry and pulses,group_reference,400.0,5.0,1.15,5.75,57500.0
+Wheat,Barley/Oats/Wheat,0.35,0.75,1.15,0.45,450.0,650.0,FAO barley/oats/wheat,group_reference,550.0,5.0,1.15,5.75,57500.0
+other oilseeds,Oilseed group,0.4,0.75,1.1,0.5,,,FAO oilseed group,group_reference,,5.0,1.1,5.5,55000.0

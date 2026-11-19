@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction &amp; Advisory History | Smart Irrigation AI</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ======================================================================
+         NAVBAR
+         ====================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <div class="brand-icon">🌱</div>
+                <span>Smart Irrigation AI</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="water_prediction.html">Water Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="irrigation_recommendation.html">Irrigation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="history.html">History</a>
+                    </li>
+
+                </ul>
+
+                <div class="d-flex align-items-center gap-2">
+                    <button id="refreshHistoryBtn" class="btn btn-secondary-custom btn-sm">
+                        <span>🔄 Refresh</span>
+                    </button>
+                    <a href="dashboard.html" class="btn btn-primary-custom btn-sm">
+                        <span>📊 Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================================
+         PAGE CONTENT
+         ====================================================================== -->
+    <main class="py-4">
+        <div class="container">
+            
+            <!-- Header with Search & Exports -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1">Prediction Records</h2>
+                    <p class="text-muted small mb-0">View, search, and export past predictions.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button id="exportCsvBtn" class="btn btn-outline-custom btn-sm">
+                        <span>📥 Export CSV</span>
+                    </button>
+                    <button id="exportJsonBtn" class="btn btn-secondary-custom btn-sm">
+                        <span>💾 Export JSON</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter & Search Bar -->
+            <div class="custom-card mb-4 p-3">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">🔍</span>
+                            <input type="text" id="historySearchInput" class="form-control border-start-0" placeholder="Filter by crop name, method, growth stage...">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                            <button type="button" class="btn btn-sm btn-outline-custom filter-pill active" data-type="all">All Records</button>
+                            <button type="button" class="btn btn-sm btn-outline-custom filter-pill" data-type="water">Water Only</button>
+                            <button type="button" class="btn btn-sm btn-outline-custom filter-pill" data-type="irrigation">Irrigation Only</button>
+                            <button type="button" class="btn btn-sm btn-outline-custom filter-pill" data-type="complete">Complete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="custom-card p-0 overflow-hidden mb-4">
+                <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-light">
+                    <span class="small fw-bold text-muted" id="recordCountLabel">Showing 0 records</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table-custom mb-0">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Type</th>
+                                <th>Crop</th>
+                                <th>Growth Stage</th>
+                                <th>Field Area</th>
+                                <th>Gross Water (L)</th>
+                                <th>Priority</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="8" class="text-center py-5 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+                                    Loading history records...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ======================================================================
+         RECORD DETAILS MODAL
+         ====================================================================== -->
+    <div class="modal fade" id="recordDetailModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content custom-card p-0 border-0">
+                <div class="modal-header border-bottom p-4">
+                    <h5 class="modal-title fw-bold" id="modalTitle">Record Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="modalContent"></div>
+                </div>
+                <div class="modal-footer border-top p-3">
+                    <button type="button" class="btn btn-secondary-custom btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================================
+         FOOTER
+         ====================================================================== -->
+    <footer class="footer-custom py-4">
+        <div class="container text-center text-muted small">
+            <p class="mb-0">🌱 Smart Irrigation AI</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Project JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/history.js"></script>
+</body>
+</html>

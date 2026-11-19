@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irrigation Recommendation | Smart Irrigation AI</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+    <!-- ======================================================================
+         NAVBAR
+         ====================================================================== -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <div class="brand-icon">🌱</div>
+                <span>Smart Irrigation AI</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="water_prediction.html">Water Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="irrigation_recommendation.html">Irrigation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">History</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3">
+                    <a href="dashboard.html" class="btn btn-secondary-custom btn-sm">
+                        <span>📊 Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================================================================
+         PAGE CONTENT
+         ====================================================================== -->
+    <main class="py-4">
+        <div class="container">
+            
+            <!-- Page Header -->
+            <div class="mb-4">
+                <h2 class="fw-bold mb-1">Irrigation Recommendation</h2>
+                <p class="text-muted small mb-0">Check irrigation priority, watering timing, and technique.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Left Column: Irrigation Decision Form -->
+                <div class="col-lg-7">
+                    <div class="custom-card shadow-sm">
+                        
+                        <!-- Mode Tabs: Live Weather vs Manual Environment -->
+                        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                            <ul class="nav nav-pills-custom" id="irrigationModeTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="irr-tab-live-btn" data-bs-toggle="pill" data-bs-target="#irr-tab-live" type="button" role="tab">
+                                        🛰️ Live Weather &amp; GPS
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="irr-tab-manual-btn" data-bs-toggle="pill" data-bs-target="#irr-tab-manual" type="button" role="tab">
+                                        🌡️ Manual Weather
+                                    </button>
+                                </li>
+                            </ul>
+                            <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill small">55 Crops</span>
+                        </div>
+
+                        <!-- Common Crop & Soil Fields -->
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="irrCrop" class="form-label">Crop</label>
+                                <select id="irrCrop" class="form-select" required>
+                                    <option value="">Loading crops...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="irrGrowthStage" class="form-label">Growth Stage</label>
+                                <select id="irrGrowthStage" class="form-select" required>
+                                    <option value="Sowing">Sowing</option>
+                                    <option value="Vegetative">Vegetative</option>
+                                    <option value="Flowering" selected>Flowering</option>
+                                    <option value="Harvest">Harvest</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Soil Section -->
+                        <div class="p-3 mb-3 rounded-3 bg-light border">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="irrSoilType" class="form-label">Soil Type</label>
+                                    <select id="irrSoilType" class="form-select" required>
+                                        <option value="Loamy" selected>Loamy</option>
+                                        <option value="Clay">Clay</option>
+                                        <option value="Sandy">Sandy</option>
+                                        <option value="Silty">Silty</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="irrSoilMoistureSlider" class="form-label">
+                                        <span>Soil Moisture</span>
+                                        <span class="fw-bold text-success" id="moistureValDisplay">25% (Dry)</span>
+                                    </label>
+                                    <input type="range" class="form-range" id="irrSoilMoistureSlider" min="5" max="95" value="25" step="1">
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span>&lt;20% Dry</span>
+                                        <span>40% Moderate</span>
+                                        <span>&gt;70% Wet</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB CONTENT: LIVE WEATHER VS MANUAL -->
+                        <div class="tab-content">
+                            <!-- TAB 1: LIVE WEATHER MODE -->
+                            <div class="tab-pane fade show active" id="irr-tab-live" role="tabpanel">
+                                <form id="liveIrrigationForm">
+                                    <div class="p-3 mb-3 rounded-3 bg-light border">
+                                        <label class="form-label mb-2">Location</label>
+                                        <div class="input-group mb-2">
+                                            <input type="text" id="irrLocSearchInput" class="form-control" placeholder="Search city or district...">
+                                            <button type="button" id="irrLocSearchBtn" class="btn btn-secondary-custom">
+                                                <span>🔍 Search</span>
+                                            </button>
+                                            <button type="button" id="irrLocGpsBtn" class="btn btn-outline-custom">
+                                                <span>📍 GPS</span>
+                                            </button>
+                                        </div>
+                                        <div id="irrLocResults" class="mb-2"></div>
+                                        <div id="irrLocBadge" class="p-2 rounded bg-white border small d-flex justify-content-between">
+                                            <span>Location: <strong id="irrLocName">Hyderabad, Telangana</strong></span>
+                                            <span class="text-muted" id="irrLocCoords">17.385° N, 78.487° E</span>
+                                        </div>
+                                        <input type="hidden" id="irrLat" value="17.385">
+                                        <input type="hidden" id="irrLon" value="78.487">
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label for="irrLiveArea" class="form-label">Field Area (Hectares)</label>
+                                            <input type="number" id="irrLiveArea" class="form-control" value="1.0" min="0.1" step="0.1" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="irrLiveMethod" class="form-label">Irrigation Method</label>
+                                            <select id="irrLiveMethod" class="form-select">
+                                                <option value="Drip" selected>Drip</option>
+                                                <option value="Sprinkler">Sprinkler</option>
+                                                <option value="Canal">Canal / Surface</option>
+                                                <option value="Rainfed">Rainfed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="irrLiveSubmitBtn" class="btn btn-primary-custom w-100 py-3">
+                                        <span>🚿 Get Recommendation</span>
+                                    </button>
+                                </form>
+                            </div>
+
+                            <!-- TAB 2: MANUAL WEATHER MODE -->
+                            <div class="tab-pane fade" id="irr-tab-manual" role="tabpanel">
+                                <form id="manualIrrigationForm">
+                                    <div class="p-3 mb-3 rounded-3 bg-light border">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label for="manTemp" class="form-label">Temperature (°C)</label>
+                                                <input type="number" id="manTemp" class="form-control" value="32.0" step="0.5" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="manHumidity" class="form-label">Humidity (%)</label>
+                                                <input type="number" id="manHumidity" class="form-control" value="45.0" min="5" max="100" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="manRain" class="form-label">Rainfall (mm)</label>
+                                                <input type="number" id="manRain" class="form-control" value="0.0" min="0" step="0.5">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="manWind" class="form-label">Wind (km/h)</label>
+                                                <input type="number" id="manWind" class="form-control" value="12.0" min="0" step="0.5">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="manSun" class="form-label">Sunlight (Hours)</label>
+                                                <input type="number" id="manSun" class="form-control" value="8.0" min="0" max="16" step="0.5">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="manEto" class="form-label">ETo (mm/day)</label>
+                                                <input type="number" id="manEto" class="form-control" value="4.5" min="0" step="0.1">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-md-6">
+                                            <label for="manArea" class="form-label">Field Area (Hectares)</label>
+                                            <input type="number" id="manArea" class="form-control" value="1.0" min="0.1" step="0.1" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="manMethod" class="form-label">Irrigation Method</label>
+                                            <select id="manMethod" class="form-select">
+                                                <option value="Drip" selected>Drip</option>
+                                                <option value="Sprinkler">Sprinkler</option>
+                                                <option value="Canal">Canal / Surface</option>
+                                                <option value="Rainfed">Rainfed</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" id="irrManualSubmitBtn" class="btn btn-primary-custom w-100 py-3">
+                                        <span>⚙️ Get Recommendation</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Right Column: Recommendation Output Card -->
+                <div class="col-lg-5">
+                    <!-- Idle Placeholder -->
+                    <div id="irrPlaceholder" class="custom-card text-center py-5">
+                        <div class="brand-icon mx-auto mb-3" style="width:60px;height:60px;font-size:28px;">🚿</div>
+                        <h5 class="fw-bold">Ready to Advise</h5>
+                        <p class="text-muted small max-w-400 mx-auto">
+                            Enter field details and click generate to get recommendations.
+                        </p>
+                    </div>
+
+                    <!-- Output Card -->
+                    <div id="irrResultCard" class="custom-card shadow-lg d-none fade-in">
+                        <div class="card-header-styled">
+                            <div>
+                                <span class="badge bg-success-subtle text-success px-2 py-1 mb-1">Result</span>
+                                <h4 class="mb-0" id="resIrrCropHeader">Crop Advisory</h4>
+                            </div>
+                            <span id="resPriorityBadge" class="badge-priority priority-high">HIGH</span>
+                        </div>
+
+                        <!-- Urgency Banner -->
+                        <div id="resUrgencyBox" class="p-3 mb-3 rounded-4" style="background: var(--accent-rose-light); border: 1.5px solid rgba(225, 29, 72, 0.2);">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <span class="fw-bold" id="resUrgencyTitle">Irrigation Needed</span>
+                                <span class="badge bg-white text-danger border" id="resScoreText">High Priority</span>
+                            </div>
+                            <p class="small text-secondary mb-0" id="resPrimaryReason">
+                                Soil moisture is low for current growth stage.
+                            </p>
+                        </div>
+
+                        <!-- Timing & Technique Cards -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-12">
+                                <div class="p-3 border rounded-3 bg-white">
+                                    <div class="text-muted small fw-bold text-uppercase">🕒 Recommended Timing</div>
+                                    <div class="fs-6 fw-bold text-dark my-1" id="resTiming">Early Morning (06:00 - 08:30 AM)</div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-3 border rounded-3 bg-white">
+                                    <div class="text-muted small fw-bold text-uppercase">💡 Technique</div>
+                                    <div class="fs-6 fw-bold text-dark my-1" id="resTechnique">Drip Irrigation</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Factors List -->
+                        <div class="mb-3 p-3 bg-light rounded-3 border">
+                            <div class="fw-bold small text-dark mb-2">Key Factors:</div>
+                            <ul class="small text-muted mb-0 ps-3" id="resFactorsList">
+                                <li>Low soil moisture level</li>
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2">
+                            <a href="dashboard.html" class="btn btn-primary-custom flex-grow-1">
+                                <span>📊 Dashboard</span>
+                            </a>
+                            <a href="history.html" class="btn btn-outline-custom">
+                                <span>📋 History</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ======================================================================
+         FOOTER
+         ====================================================================== -->
+    <footer class="footer-custom py-4">
+        <div class="container text-center text-muted small">
+            <p class="mb-0">🌱 Smart Irrigation AI</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Project JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/irrigation.js"></script>
+</body>
+</html>
